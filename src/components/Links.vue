@@ -4,15 +4,20 @@
     <input v-model="sender" type="text" placeholder="Sender">
     <button @click="search">Search</button>
     <div>{{links.length}} links</div>
-    <div v-for="link in links" v-bind:key="link.date">{{link.sender_name}} sent <a target="blank" :href="link.link">{{link.link}}</a> the {{link.date}} </div>
+    <Link v-for="link in links" v-bind="link" v-bind:key="link.date"/>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
+import Link from '@/components/Link.vue';
 import axios from 'axios';
 
-@Component
+@Component({
+  components: {
+    Link,
+  },
+})
 export default class Links extends Vue {
 
   links: Array<Object> = [];

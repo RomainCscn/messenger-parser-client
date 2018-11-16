@@ -1,7 +1,7 @@
 <template>
   <div class="about">
     <h1>This is a revolution.</h1>
-    <Links></Links>
+    <Links/>
   </div>
 </template>
 
