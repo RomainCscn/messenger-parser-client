@@ -1,5 +1,5 @@
 <template>
-  <div class="about">
+  <div class="search">
     <h1>This is a revolution.</h1>
     <Links/>
   </div>
@@ -15,5 +15,5 @@ import Links from '@/components/Links.vue';
   },
 })
 
-export default class About extends Vue {}
+export default class Search extends Vue {}
 </script>

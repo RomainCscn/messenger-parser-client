@@ -2,9 +2,12 @@
   <div>
     <input v-model="site" type="text" placeholder="Site">
     <input v-model="sender" type="text" placeholder="Sender">
+    <input v-model="year" type="number" placeholder="Year" max="2018" min="2004">
+    <input v-model="month" type="number" placeholder="Month" max="12" min="1">
+    <input v-model="day" type="number" placeholder="Day" max="31" min="1">
     <button @click="search">Search</button>
     <div>{{links.length}} links</div>
-    <Link v-for="link in links" v-bind="link" v-bind:key="link.date"/>
+    <Link v-for="link in links" v-bind="link" v-bind:senderName="link.sender_name" v-bind:key="link.date"/>
   </div>
 </template>
 
@@ -20,14 +23,34 @@ import axios from 'axios';
 })
 export default class Links extends Vue {
 
-  links: Array<Object> = [];
-  site: string = "";
-  sender: string = "";
+  private links: object[] = [];
+  private site: string = '';
+  private sender: string = '';
+  private year = null;
+  private month = null;
+  private day = null;
+
+  get computedYear() {
+    return this.year === '' ? null : this.year;
+  }
+
+  get computedMonth() {
+    return this.month === '' ? null : this.month;
+  }
+
+  get computedDay()  {
+    return this.day === '' ? null : this.day;
+  }
 
   private async searchAll() {
     try {
-      const response = await axios.get('http://localhost:3000/search/all');
-      console.log(response.data);
+      const response = await axios.get('http://localhost:3000/search/all', {
+        params: {
+          year: this.computedYear,
+          month: this.computedMonth,
+          day: this.computedDay,
+        },
+      });
       this.links = response.data.links;
     } catch (error) {
       console.error(error);
@@ -36,8 +59,13 @@ export default class Links extends Vue {
 
   private async searchSite() {
     try {
-      const response = await axios.get('http://localhost:3000/search/site/' + this.site);
-      console.log(response.data);
+      const response = await axios.get('http://localhost:3000/search/site/' + this.site, {
+        params: {
+          year: this.computedYear,
+          month: this.computedMonth,
+          day: this.computedDay,
+        },
+      });
       this.links = response.data.links;
     } catch (error) {
       console.error(error);
@@ -46,8 +74,13 @@ export default class Links extends Vue {
 
   private async searchSender() {
     try {
-      const response = await axios.get('http://localhost:3000/search/sender/' + this.sender);
-      console.log(response.data);
+      const response = await axios.get('http://localhost:3000/search/sender/' + this.sender, {
+        params: {
+          year: this.computedYear,
+          month: this.computedMonth,
+          day: this.computedDay,
+        },
+      });
       this.links = response.data.links;
     } catch (error) {
       console.error(error);
@@ -56,8 +89,13 @@ export default class Links extends Vue {
 
   private async searchSiteAndSender() {
     try {
-      const response = await axios.get('http://localhost:3000/search/site/' + this.site + '/sender/' + this.sender);
-      console.log(response.data);
+      const response = await axios.get('http://localhost:3000/search/site/' + this.site + '/sender/' + this.sender, {
+        params: {
+          year: this.computedYear,
+          month: this.computedMonth,
+          day: this.computedDay,
+        },
+      });
       this.links = response.data.links;
     } catch (error) {
       console.error(error);
