@@ -28,7 +28,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 
 
 @Component
@@ -36,8 +36,14 @@ export default class Link extends Vue {
   @Prop() private senderName!: string;
   @Prop() private date!: string;
   @Prop() private link!: string;
+  @Prop() private showDetails!: boolean;
 
   private displayCompleteLink: boolean = false;
+
+  @Watch('showDetails')
+  private onShowDetailsChange(val: boolean, oldVal: boolean) {
+    this.displayCompleteLink = val;
+  }
 
   get shortDomainName() {
     const match = this.link.match(/:\/\/(www[0-9]?\.)?(.[^/:]+)/i);
@@ -68,6 +74,7 @@ export default class Link extends Vue {
 }
 
 .link {
+  word-wrap: break-word;
   text-decoration: none;
   font-size: 1.2rem;
   color: #42b983;

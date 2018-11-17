@@ -11,7 +11,7 @@
 import { Component, Vue, Prop, Watch } from 'vue-property-decorator';
 
 @Component
-export default class Months extends Vue {
+export default class Days extends Vue {
   private days: number[] = [];
   private selected: number = 0;
 

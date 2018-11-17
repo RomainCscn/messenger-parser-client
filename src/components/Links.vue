@@ -16,11 +16,18 @@
         <Days class="date-selector" @selected="updateDays"></Days>
       </div>
     </div>
-    <div class="has-text-centered">
-      <button class="button is-primary" @click="search">Search</button>
-      <div class="is-italic" v-if="searched">{{links.length}} link<span v-if="links.length > 0">s</span> found</div>
+    <div class="field is-grouped is-grouped-centered">
+      <div class="control">
+        <button class="button is-primary" @click="search">Search</button>
+      </div>
+      <div class="control">
+        <button class="button is-text details" @click="showLinksDetails = !showLinksDetails">
+          {{ showLinksDetails ? "Hide" : "Show"}} all details
+        </button>
+      </div>
+      <div class="is-italic links-number" v-if="searched">{{links.length}} link<span v-if="links.length > 0">s</span> found</div>
     </div>
-    <Link class="link-test" v-for="link in links" v-bind="link" v-bind:senderName="link.sender_name" v-bind:key="link.date"/>
+    <Link class="link-test" v-for="link in links" v-bind="link" v-bind:showDetails="showLinksDetails" v-bind:senderName="link.sender_name" v-bind:key="link.date"/>
   </div>
 </template>
 
@@ -49,6 +56,7 @@ export default class Links extends Vue {
   private month: number = 0;
   private day: number = 0;
   private searched: boolean = false;
+  private showLinksDetails: boolean = false;
 
   get computedYear() {
     return this.year === 0 ? null : this.year;
@@ -165,6 +173,20 @@ export default class Links extends Vue {
 
 .date-selector {
   margin-right: 12px;
+}
+
+.details {
+  cursor: pointer;
+  text-decoration: none;
+  &:focus, &:hover {
+    outline: none;
+    box-shadow: none;
+    background: none;
+  }
+}
+
+.links-number {
+  margin-top: 8px;
 }
 
 </style>

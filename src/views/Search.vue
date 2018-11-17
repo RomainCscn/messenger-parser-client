@@ -1,6 +1,8 @@
 <template>
-  <div class="container">
-    <Links/>
+  <div class="section">
+    <div class="container">
+      <Links/>
+    </div>
   </div>
 </template>
 
