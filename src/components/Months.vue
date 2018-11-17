@@ -27,9 +27,9 @@ export default class Months extends Vue {
     { text: 'December', value: 12 },
   ];
 
-  public selected: number = 0;
+  private selected: number = 0;
 
-  update() {
+  private update() {
       this.$emit('selected', this.selected);
   }
 }

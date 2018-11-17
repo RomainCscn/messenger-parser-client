@@ -7,7 +7,7 @@
     <Days @selected="updateDays"></Days>
     <button @click="search">Search</button>
     <div>{{links.length}} links</div>
-    <Link v-for="link in links" v-bind="link" v-bind:senderName="link.sender_name" v-bind:key="link.date"/>
+    <Link class="link" v-for="link in links" v-bind="link" v-bind:senderName="link.sender_name" v-bind:key="link.date"/>
   </div>
 </template>
 
@@ -49,15 +49,15 @@ export default class Links extends Vue {
   }
 
   private updateYear(value: any) {
-    this.year = value === "0" ? 0 : value;
+    this.year = value === '0' ? 0 : value;
   }
 
   private updateMonth(value: any) {
-    this.month = value === "0" ? 0 : value;
+    this.month = value === '0' ? 0 : value;
   }
 
   private updateDays(value: any) {
-    this.day = value === "0" ? 0 : value;
+    this.day = value === '0' ? 0 : value;
   }
 
   private async searchAll() {
@@ -135,5 +135,9 @@ export default class Links extends Vue {
 </script>
 
 <style lang="scss" scoped>
+
+.link {
+  margin: 12px 0;
+}
 
 </style>

@@ -13,17 +13,15 @@ import { Component, Vue, Prop, Watch } from 'vue-property-decorator';
 @Component
 export default class Months extends Vue {
   private days: number[] = [];
+  private selected: number = 0;
 
-  mounted() {
-    for (var i = 1;  i < 32; i++) {
+  private mounted() {
+    for (let i = 1;  i < 32; i++) {
       this.days.push(i);
     }
   }
-  
 
-  public selected: number = 0;
-
-  update() {
+  private update() {
     this.$emit('selected', this.selected);
   }
 }
