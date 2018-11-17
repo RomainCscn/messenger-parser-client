@@ -2,9 +2,9 @@
   <div>
     <input v-model="site" type="text" placeholder="Site">
     <input v-model="sender" type="text" placeholder="Sender">
-    <input v-model="year" type="number" placeholder="Year" max="2018" min="2004">
-    <input v-model="month" type="number" placeholder="Month" max="12" min="1">
-    <input v-model="day" type="number" placeholder="Day" max="31" min="1">
+    <Years @selected="updateYear"></Years>
+    <Months @selected="updateMonth"></Months>
+    <Days @selected="updateDays"></Days>
     <button @click="search">Search</button>
     <div>{{links.length}} links</div>
     <Link v-for="link in links" v-bind="link" v-bind:senderName="link.sender_name" v-bind:key="link.date"/>
@@ -14,11 +14,17 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import Link from '@/components/Link.vue';
+import Days from '@/components/Days.vue';
+import Months from '@/components/Months.vue';
+import Years from '@/components/Years.vue';
 import axios from 'axios';
 
 @Component({
   components: {
     Link,
+    Days,
+    Months,
+    Years,
   },
 })
 export default class Links extends Vue {
@@ -26,20 +32,32 @@ export default class Links extends Vue {
   private links: object[] = [];
   private site: string = '';
   private sender: string = '';
-  private year = null;
-  private month = null;
-  private day = null;
+  private year: number = 0;
+  private month: number = 0;
+  private day: number = 0;
 
   get computedYear() {
-    return this.year === '' ? null : this.year;
+    return this.year === 0 ? null : this.year;
   }
 
   get computedMonth() {
-    return this.month === '' ? null : this.month;
+    return this.month === 0 ? null : this.month;
   }
 
   get computedDay()  {
-    return this.day === '' ? null : this.day;
+    return this.day === 0 ? null : this.day;
+  }
+
+  private updateYear(value: any) {
+    this.year = value === "0" ? 0 : value;
+  }
+
+  private updateMonth(value: any) {
+    this.month = value === "0" ? 0 : value;
+  }
+
+  private updateDays(value: any) {
+    this.day = value === "0" ? 0 : value;
   }
 
   private async searchAll() {
