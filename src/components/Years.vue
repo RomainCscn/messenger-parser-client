@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="select">
     <select v-model="selected" @change="update" id="years">
       <option value="0">No year</option>
       <option v-for="year in years" :value="year" v-bind:key="year">{{year}}</option>

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="select">
     <select v-model="selected" @change="update" id="days">
       <option value="0">No day</option>
       <option v-for="day in days" :value="day" v-bind:key="day">{{day}}</option>

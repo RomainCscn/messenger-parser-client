@@ -1,13 +1,26 @@
 <template>
   <div>
-    <input v-model="site" type="text" placeholder="Site">
-    <input v-model="sender" type="text" placeholder="Sender">
-    <Years @selected="updateYear"></Years>
-    <Months @selected="updateMonth"></Months>
-    <Days @selected="updateDays"></Days>
-    <button @click="search">Search</button>
-    <div>{{links.length}} links</div>
-    <Link class="link" v-for="link in links" v-bind="link" v-bind:senderName="link.sender_name" v-bind:key="link.date"/>
+    <div class="field">
+      <span class="label">Filter by site:</span>
+      <input class="input" v-model="site" type="text" placeholder="Site">
+    </div>
+    <div class="field">
+      <span class="label">Filter by sender:</span>
+      <input class="input" v-model="sender" type="text" placeholder="Sender">
+    </div>
+    <div class="field">
+      <span class="label">Filter by date:</span>
+      <div class="date-container">
+        <Years class="date-selector" @selected="updateYear"></Years>
+        <Months class="date-selector" @selected="updateMonth"></Months>
+        <Days class="date-selector" @selected="updateDays"></Days>
+      </div>
+    </div>
+    <div class="has-text-centered">
+      <button class="button is-primary" @click="search">Search</button>
+      <div class="is-italic" v-if="searched">{{links.length}} link<span v-if="links.length > 0">s</span> found</div>
+    </div>
+    <Link class="link-test" v-for="link in links" v-bind="link" v-bind:senderName="link.sender_name" v-bind:key="link.date"/>
   </div>
 </template>
 
@@ -35,6 +48,7 @@ export default class Links extends Vue {
   private year: number = 0;
   private month: number = 0;
   private day: number = 0;
+  private searched: boolean = false;
 
   get computedYear() {
     return this.year === 0 ? null : this.year;
@@ -69,6 +83,7 @@ export default class Links extends Vue {
           day: this.computedDay,
         },
       });
+      this.searched = true;
       this.links = response.data.links;
     } catch (error) {
       console.error(error);
@@ -84,6 +99,7 @@ export default class Links extends Vue {
           day: this.computedDay,
         },
       });
+      this.searched = true;
       this.links = response.data.links;
     } catch (error) {
       console.error(error);
@@ -99,6 +115,7 @@ export default class Links extends Vue {
           day: this.computedDay,
         },
       });
+      this.searched = true;
       this.links = response.data.links;
     } catch (error) {
       console.error(error);
@@ -114,6 +131,7 @@ export default class Links extends Vue {
           day: this.computedDay,
         },
       });
+      this.searched = true;
       this.links = response.data.links;
     } catch (error) {
       console.error(error);
@@ -136,8 +154,17 @@ export default class Links extends Vue {
 
 <style lang="scss" scoped>
 
-.link {
+.link-test {
   margin: 12px 0;
+}
+
+.date-container {
+  display: flex;
+  justify-content: start;
+}
+
+.date-selector {
+  margin-right: 12px;
 }
 
 </style>

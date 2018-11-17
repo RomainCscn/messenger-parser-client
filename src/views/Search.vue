@@ -1,6 +1,5 @@
 <template>
-  <div class="search">
-    <h1>This is a revolution.</h1>
+  <div class="container">
     <Links/>
   </div>
 </template>
@@ -17,3 +16,7 @@ import Links from '@/components/Links.vue';
 
 export default class Search extends Vue {}
 </script>
+
+<style lang="scss" scoped>
+
+</style>

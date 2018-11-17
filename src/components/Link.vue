@@ -1,7 +1,7 @@
 <template>
   <div>
-    <div class="link">
-      <a target="blank" :href="link">
+    <div>
+      <a target="blank" :href="link" class="link">
         <span v-if="displayCompleteLink">
           {{link}}
         </span>
@@ -10,20 +10,18 @@
         </span>
       </a>
     </div>
-    <span>
-      <span v-if="displayCompleteLink">
-        <br> {{senderName}} - {{date}} 
-      </span>
-      <span v-else>
-        - {{senderName}} - {{shortDate}} 
-      </span>
+    <span v-if="displayCompleteLink">
+      <span class="sender">{{senderName}}</span><span class="date"> - {{date}}</span>
     </span>
-    <span @click="showCompleteLink" class="see-more">
-      <span v-if="displayCompleteLink">
-        See less
+    <span v-else>
+      <span class="sender">{{senderName}}</span><span class="date"> - {{shortDate}}</span>
+    </span>
+    <span @click="showCompleteLink">
+      <span v-if="displayCompleteLink" class="see-more">
+        | See less
       </span>
-      <span v-else>
-        See the link
+      <span v-else class="see-more">
+        | See more
       </span>
     </span>
   </div>
@@ -65,6 +63,24 @@ export default class Link extends Vue {
 
 .see-more {
   color: gray;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.link {
+  text-decoration: none;
+  font-size: 1.2rem;
+  color: #42b983;
+  font-weight: bold;
+}
+
+.date {
+  font-size: 0.9rem;
+  color: gray;
+}
+
+.sender {
+  font-size: 0.9rem;
 }
 
 </style>

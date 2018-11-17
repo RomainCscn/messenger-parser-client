@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="select">
     <select v-model="selected" @change="update" id="months">
       <option value="0">No month</option>
       <option v-for="month in months" :value="month.value" v-bind:key="month.value">{{month.text}}</option>
