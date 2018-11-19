@@ -11,17 +11,22 @@
     <div class="field">
       <span class="label">Filter by date:</span>
       <div class="date-container">
-        <Years class="date-selector" @selected="updateYear"></Years>
+        <Years class="date-selector" v-bind:class="{ 'is-danger': showDateError }" @selected="updateYear"></Years>
         <Months class="date-selector" @selected="updateMonth"></Months>
-        <Days class="date-selector" @selected="updateDays"></Days>
+        <Days class="date-selector day-selector" @selected="updateDays"></Days>
+        <article v-if="showDateError" class="message is-danger date-error-container">
+          <div class="message-body date-error-msg">
+            Input at least a year or no date at all.
+          </div>
+        </article>
       </div>
     </div>
-    <div class="field is-grouped is-grouped-centered">
+    <div class="field is-grouped is-grouped-centered search-container">
       <div class="control">
         <button class="button is-primary" @click="search">Search</button>
       </div>
       <div class="control">
-        <button class="button is-text details" @click="showLinksDetails = !showLinksDetails">
+        <button class="button is-text details" v-if="searched" @click="showLinksDetails = !showLinksDetails">
           {{ showLinksDetails ? "Hide" : "Show"}} all details
         </button>
       </div>
@@ -57,6 +62,7 @@ export default class Links extends Vue {
   private day: number = 0;
   private searched: boolean = false;
   private showLinksDetails: boolean = false;
+  private showDateError: boolean = false;
 
   get computedYear() {
     return this.year === 0 ? null : this.year;
@@ -70,16 +76,30 @@ export default class Links extends Vue {
     return this.day === 0 ? null : this.day;
   }
 
+  get validDate() {
+    const noDate = !this.computedYear && !this.computedMonth && !this.computedDay;
+    return noDate || this.computedYear !== null;
+  }
+
   private updateYear(value: any) {
     this.year = value === '0' ? 0 : value;
+    if (this.validDate) {
+      this.showDateError = false;
+    }
   }
 
   private updateMonth(value: any) {
     this.month = value === '0' ? 0 : value;
+    if (this.validDate) {
+      this.showDateError = false;
+    }
   }
 
   private updateDays(value: any) {
     this.day = value === '0' ? 0 : value;
+    if (this.validDate) {
+      this.showDateError = false;
+    }
   }
 
   private async searchAll() {
@@ -147,14 +167,19 @@ export default class Links extends Vue {
   }
 
   private search() {
-    if (this.sender && this.site) {
-      this.searchSiteAndSender();
-    } else if (this.sender) {
-      this.searchSender();
-    } else if (this.site) {
-      this.searchSite();
+    if (this.validDate) {
+      this.showDateError = false;
+      if (this.sender && this.site) {
+        this.searchSiteAndSender();
+      } else if (this.sender) {
+        this.searchSender();
+      } else if (this.site) {
+        this.searchSite();
+      } else {
+        this.searchAll();
+      }
     } else {
-      this.searchAll();
+      this.showDateError = true;
     }
   }
  }
@@ -169,6 +194,7 @@ export default class Links extends Vue {
 .date-container {
   display: flex;
   justify-content: start;
+  flex-wrap: wrap;
 }
 
 .date-selector {
@@ -187,6 +213,26 @@ export default class Links extends Vue {
 
 .links-number {
   margin-top: 8px;
+}
+
+@media all and (max-width: 715px) {
+  .date-error-container {
+    margin-top: 1rem;
+  }
+}
+
+@media all and (max-width: 425px) {
+  .day-selector {
+    margin-top: 1rem;
+  }
+}
+
+.date-error-msg {
+  padding: 6px 12px;
+}
+
+.search-container {
+  margin: 3rem 0;
 }
 
 </style>
