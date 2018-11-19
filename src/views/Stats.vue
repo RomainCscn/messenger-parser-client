@@ -4,30 +4,30 @@
       <div class="hero-body">
         <div class="container">
           <h1 class="title">
-            Search across all your links
+            Statistics about your messages
           </h1>
           <h2 class="subtitle">
-            Use various filters to refine your search <em style="color: #b5b5b5">(filters are optional)</em>
+            <em>How many links did you send this month?</em>
           </h2>
         </div>
       </div>
     </section>
     <div class="container">
-      <Links/>
+      <Statistics/>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import Links from '@/components/Links.vue';
+import Statistics from '@/components/Statistics.vue';
 
 @Component({
   components: {
-    Links,
+    Statistics,
   },
 })
-export default class Search extends Vue {}
+export default class Stats extends Vue {}
 </script>
 
 <style lang="scss" scoped>
