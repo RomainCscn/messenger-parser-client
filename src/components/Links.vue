@@ -21,9 +21,14 @@
         </article>
       </div>
     </div>
-    <div class="field is-grouped is-grouped-centered search-container">
+    <div class="field is-grouped search-container">
       <div class="control">
-        <button class="button is-primary" @click="search">Search</button>
+        <button class="button is-primary is-medium" @click="search">
+          <span class="icon">
+            <img src="../assets/search.svg" style="max-height: 24px"/>
+          </span>
+          <span>Search</span>
+        </button>
       </div>
       <div class="control">
         <button class="button is-text details" v-if="searched" @click="showLinksDetails = !showLinksDetails">
@@ -202,6 +207,7 @@ export default class Links extends Vue {
 }
 
 .details {
+  margin-top: 5px;
   cursor: pointer;
   text-decoration: none;
   &:focus, &:hover {
@@ -212,7 +218,7 @@ export default class Links extends Vue {
 }
 
 .links-number {
-  margin-top: 8px;
+  margin-top: 12px;
 }
 
 @media all and (max-width: 715px) {
