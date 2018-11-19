@@ -1,5 +1,17 @@
 <template>
   <div class="section">
+    <section class="hero">
+      <div class="hero-body">
+        <div class="container">
+          <h1 class="title">
+            Search across all your links
+          </h1>
+          <h2 class="subtitle">
+            Use various filters to refine your search <em style="color: #b5b5b5">(filters are optional)</em>
+          </h2>
+        </div>
+      </div>
+    </section>
     <div class="container">
       <Links/>
     </div>

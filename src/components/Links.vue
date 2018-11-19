@@ -1,15 +1,15 @@
 <template>
   <div>
     <div class="field">
-      <span class="label">Filter by site:</span>
+      <span class="label">Site filter</span>
       <input class="input" v-model="site" type="text" placeholder="Site">
     </div>
     <div class="field">
-      <span class="label">Filter by sender:</span>
+      <span class="label">Sender filter</span>
       <input class="input" v-model="sender" type="text" placeholder="Sender">
     </div>
     <div class="field">
-      <span class="label">Filter by date:</span>
+      <span class="label">Date filter</span>
       <div class="date-container">
         <Years class="date-selector" v-bind:class="{ 'is-danger': showDateError }" @selected="updateYear"></Years>
         <Months class="date-selector" @selected="updateMonth"></Months>
