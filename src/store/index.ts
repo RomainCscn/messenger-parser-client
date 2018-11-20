@@ -18,7 +18,7 @@ const store = new Vuex.Store({
     },
     setSearched(state, searched) {
       state.searched = searched;
-    }
+    },
   },
 });
 

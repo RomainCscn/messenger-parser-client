@@ -30,14 +30,22 @@
           <span>Search</span>
         </button>
       </div>
-      <div class="control">
-        <button class="button is-text details" v-if="searchedLinks.length > 0" @click="showLinksDetails = !showLinksDetails">
-          {{ showLinksDetails ? "Hide" : "Show"}} all details
-        </button>
-      </div>
       <div class="is-italic links-number" v-if="searched && searchedLinks.length >= 0">{{searchedLinks.length}} link<span v-if="searchedLinks.length > 0">s</span> found</div>
     </div>
-    <Link class="link-test" v-for="link in searchedLinks" v-bind="link" v-bind:showDetails="showLinksDetails" v-bind:senderName="link.sender_name" v-bind:key="link.date"/>
+    <div style="overflow-x:auto;">
+      <table v-if="searched && searchedLinks.length > 0" class="table is-hoverable is-fullwidth is-narrow">
+        <thead>
+          <tr>
+            <th>Link</th>
+            <th>Sender</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <LinkTable class="link-test" v-for="link in searchedLinks" v-bind="link" :senderName="link.sender_name" :key="link.date"/>
+        </tbody>
+      </table>
+    </div>
   </div>
 </template>
 
@@ -46,6 +54,7 @@ import { Component, Vue } from 'vue-property-decorator';
 import { mapMutations } from 'vuex';
 import axios from 'axios';
 import Link from '@/components/Link.vue';
+import LinkTable from '@/components/LinkTable.vue';
 import Days from '@/components/Days.vue';
 import Months from '@/components/Months.vue';
 import Years from '@/components/Years.vue';
@@ -54,6 +63,7 @@ import store from '@/store';
 @Component({
   components: {
     Link,
+    LinkTable,
     Days,
     Months,
     Years,
@@ -66,7 +76,6 @@ export default class Links extends Vue {
   private year: number = 0;
   private month: number = 0;
   private day: number = 0;
-  private showLinksDetails: boolean = false;
   private showDateError: boolean = false;
 
   get computedYear() {
@@ -218,17 +227,6 @@ export default class Links extends Vue {
 
 .date-selector {
   margin-right: 12px;
-}
-
-.details {
-  margin-top: 5px;
-  cursor: pointer;
-  text-decoration: none;
-  &:focus, &:hover {
-    outline: none;
-    box-shadow: none;
-    background: none;
-  }
 }
 
 .links-number {
