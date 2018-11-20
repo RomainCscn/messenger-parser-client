@@ -38,10 +38,13 @@ export default class Link extends Vue {
 .link {
   word-break: break-word;
   text-decoration: none;
-  color: #42b983;
   font-weight: bold;
   &:visited {
-    color: #276F4E;
+    color: purple !important;
+  }
+  &:hover {
+    color: #3273dc;
+    text-decoration: underline;
   }
 }
 
