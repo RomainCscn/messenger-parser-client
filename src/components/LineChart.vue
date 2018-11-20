@@ -1,8 +1,10 @@
 <script lang="ts">
 import { Component, Vue, Mixins, Prop } from 'vue-property-decorator';
-import { Bar } from 'vue-chartjs';
+import { Line, mixins } from 'vue-chartjs';
 
-interface BarData {
+const { reactiveProp } = mixins;
+
+interface LineData {
   labels: string[];
   datasets: Dataset[];
 }
@@ -14,8 +16,8 @@ interface Dataset {
 }
 
 @Component
-export default class BarChart extends Mixins(Bar) {
-  @Prop() private chartData!: BarData;
+export default class LineChart extends Mixins(Line, reactiveProp) {
+  @Prop() private chartData!: LineData;
   @Prop() private options!: object;
 
   public mounted() {

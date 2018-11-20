@@ -7,7 +7,7 @@
             Statistics about your messages
           </h1>
           <h2 class="subtitle">
-            <em>How many links did you send this month?</em>
+            <em>How many links did you send this month?</em> And way more
           </h2>
         </div>
       </div>

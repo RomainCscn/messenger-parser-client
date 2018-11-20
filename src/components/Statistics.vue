@@ -1,15 +1,24 @@
 <template>
-  <div>
-    Hello
-    <PieChart :chartData="data"/>
-    <button @click="fillData()">Randomize</button>
+  <div class="columns is-multiline">
+    <div class="column">
+      <PieChart :chartData="sendersChartData()"/>
+    </div>
+    <div class="column">
+      <LineChart :chartData="yearsChartData()"/>
+    </div>
+    <div class="column">
+      <select v-model="selectedYear" name="year" id="year">
+        <option v-for="year in allYears" :value="year" :key="year">{{year}}</option>
+      </select>
+      <LineChart :chartData="monthsChartData(selectedYear)"/>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import axios from 'axios';
-import BarChart from '@/components/BarChart.vue';
+import LineChart from '@/components/LineChart.vue';
 import PieChart from '@/components/PieChart.vue';
 import ColorChooser from '@/components/ColorChooser.vue';
 
@@ -26,29 +35,79 @@ interface ChartData {
 
 @Component({
   components: {
-    BarChart,
+    LineChart,
     PieChart,
     ColorChooser,
   },
 })
 export default class Statistics extends Vue {
 
-  private data = {};
   private loaded: boolean = false;
   private links: Link[] = [];
   private color = new ColorChooser();
+  private selectedYear = '2018';
 
   public mounted() {
     this.searchAll();
   }
 
-  private fillData() {
-    const years = [...new Set(this.links.map((link) => link.date.split('-')[2].slice(0, 4)))];
+  get allYears() {
+    return [...new Set(this.links.map((link) => link.date.split('-')[2].slice(0, 4)))];
+  }
+
+  get allSenders() {
+    return [...new Set(this.links.map((link) => link.sender_name))];
+  }
+
+  get allMonths() {
+    return [...new Set(this.links.map((link) => {
+      const date = link.date.split('-');
+      return date[1].concat('-' + date[2]).split(' ')[0];
+    }))];
+  }
+
+  private disableBezier() {
+    return {
+      elements: {
+        line: {
+          tension: 0, // disables bezier curves
+        },
+      },
+    };
+  }
+
+  private sendersChartData() {
+    const sendersData: ChartData[] = [];
+    this.allSenders.forEach((sender) => {
+      sendersData.push({label: sender, linksSent: this.linksPerSender(this.links, sender).length});
+    });
+    return this.createPieChart(sendersData);
+  }
+
+  private yearsChartData() {
     const yearsData: ChartData[] = [];
-    years.forEach((year) => {
+    this.allYears.forEach((year) => {
       yearsData.push({label: year, linksSent: this.linksForYear(this.links, year).length });
     });
-    this.createPieChart(yearsData);
+    return this.createLineChart(yearsData.reverse(), 'Total links sent');
+  }
+
+  private monthsChartData(year: string) {
+    const monthsData: ChartData[] = [];
+    this.allMonthsForYear(year).forEach((month) => {
+      monthsData.push({label: month, linksSent: this.linksForMonth(this.linksForYear(this.links, year), month).length});
+    });
+    return this.createLineChart(monthsData.reverse(), 'Total links sent');
+  }
+
+  private allMonthsForYear(year: string) {
+    return [...new Set(this.links
+      .filter((link) => link.date.includes(year))
+      .map((link) => {
+        const date = link.date.split('-');
+        return date[1].concat('-' + date[2]).split(' ')[0];
+      }),
+    )];
   }
 
   private async searchAll() {
@@ -56,36 +115,16 @@ export default class Statistics extends Vue {
       const response = await axios.get('http://localhost:3000/search/all');
       this.links = response.data.links;
 
-      const sendersName = [...new Set(this.links.map((link) => link.sender_name))];
-      const sendersData: ChartData[] = [];
-      sendersName.forEach((name) => {
-        sendersData.push({label: name, linksSent: this.linksPerSender(this.links, name).length});
-      });
-      this.createPieChart(sendersData);
-
-      const years = [...new Set(this.links.map((link) => link.date.split('-')[2].slice(0, 4)))];
-      years.forEach((year) => {
-        // console.log(year, this.linksForYear(this.links, year).length);
-      });
-
-      const monthsAndYears = [...new Set(this.links.map((link) => {
-        const date = link.date.split('-');
-        return date[1].concat('-' + date[2]).split(' ')[0];
-      }))];
-      monthsAndYears.forEach((monthAndYear) => {
-        // console.log(monthAndYear, this.linksForMonth(this.links, monthAndYear).length);
-      });
-
-      sendersName.forEach((name) => {
-        years.forEach((year) => {
-          // console.log(name, year, this.linksForYear(this.linksPerSender(this.links, name), year).length);
+      this.allSenders.forEach((sender) => {
+        this.allYears.forEach((year) => {
+          // console.log(sender, year, this.linksForYear(this.linksPerSender(this.links, sender), year).length);
         });
       });
 
-      sendersName.forEach((name) => {
-        monthsAndYears.forEach((monthAndYear) => {
-          // console.log(name, monthAndYear,
-          // this.linksForMonth(this.linksPerSender(this.links, name), monthAndYear).length);
+      this.allSenders.forEach((sender) => {
+        this.allMonths.forEach((month) => {
+          // console.log(sender, month,
+          // this.linksForMonth(this.linksPerSender(this.links, sender), month).length);
         });
       });
 
@@ -109,12 +148,29 @@ export default class Statistics extends Vue {
   private createPieChart(pieData: ChartData[]) {
     const labels = pieData.map((d) => d.label);
     const datasetsData = pieData.map((d) => d.linksSent);
-    this.data = {
+    return {
       labels,
       datasets: [
         {
           backgroundColor: this.color.returnColors(datasetsData.length),
           data: datasetsData,
+        },
+      ],
+    };
+  }
+
+  private createLineChart(pieData: ChartData[], label: string) {
+    const labels = pieData.map((d) => d.label);
+    const datasetsData = pieData.map((d) => d.linksSent);
+    return {
+      labels,
+      datasets: [
+        {
+          label,
+          backgroundColor: '#5DA5DA',
+          borderColor: '#5DA5DA',
+          data: datasetsData,
+          fill: false,
         },
       ],
     };
