@@ -14,6 +14,9 @@
       </div>
       <LineChart :chartData="monthsChartData(selectedYear)"/>
     </div>
+    <div class="column">
+      <BarChart :chartData="sendersBarChartData()" :options="startAt0()"/>
+    </div>
   </div>
 </template>
 
@@ -21,8 +24,9 @@
 import { Component, Vue } from 'vue-property-decorator';
 import axios from 'axios';
 import store from '@/store';
-import LineChart from '@/components/LineChart.vue';
-import PieChart from '@/components/PieChart.vue';
+import LineChart from '@/components/chart/LineChart.vue';
+import PieChart from '@/components/chart/PieChart.vue';
+import BarChart from '@/components/chart/BarChart.vue';
 import ColorChooser from '@/components/ColorChooser.vue';
 
 interface Link {
@@ -36,10 +40,23 @@ interface ChartData {
   linksSent: number;
 }
 
+interface Dataset {
+  label: string;
+  data: number[];
+  backgroundColor: string;
+  borderColor: string;
+}
+
+interface BarData {
+  labels: string[];
+  datasets: Dataset[];
+}
+
 @Component({
   components: {
     LineChart,
     PieChart,
+    BarChart,
     ColorChooser,
   },
 })
@@ -79,12 +96,51 @@ export default class Statistics extends Vue {
     };
   }
 
+  private startAt0() {
+    return {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true,
+                },
+            }],
+        },
+    };
+  }
+
   private sendersChartData() {
     const sendersData: ChartData[] = [];
     this.allSenders.forEach((sender) => {
       sendersData.push({label: sender, linksSent: this.linksPerSender(this.links, sender).length});
     });
     return this.createPieChart(sendersData);
+  }
+
+  private sendersBarChartData() {
+    const sendersBarData: BarData = {
+      labels: [],
+      datasets: [],
+    };
+
+    this.allSenders.forEach((sender, i) => sendersBarData.datasets.push(
+      {
+        label: sender,
+        data: [],
+        backgroundColor: this.color.returnColor(i),
+        borderColor: this.color.returnColor(i),
+    }));
+
+    this.allYears.forEach((year) => {
+      sendersBarData.labels.push(year);
+      const yearLinks = this.linksForYear(this.links, year);
+      this.allSenders.forEach((sender) => {
+        sendersBarData.datasets.filter((dataset) => dataset.label === sender)[0].data
+          .push(this.linksPerSender(yearLinks, sender).length);
+      });
+    });
+
+    sendersBarData.datasets.map((dataset) => dataset.data.reverse());
+    return this.createBarChart(sendersBarData);
   }
 
   private yearsChartData() {
@@ -164,9 +220,9 @@ export default class Statistics extends Vue {
     };
   }
 
-  private createLineChart(pieData: ChartData[], label: string) {
-    const labels = pieData.map((d) => d.label);
-    const datasetsData = pieData.map((d) => d.linksSent);
+  private createLineChart(lineData: ChartData[], label: string) {
+    const labels = lineData.map((d) => d.label);
+    const datasetsData = lineData.map((d) => d.linksSent);
     return {
       labels,
       datasets: [
@@ -178,6 +234,13 @@ export default class Statistics extends Vue {
           fill: false,
         },
       ],
+    };
+  }
+
+  private createBarChart(barData: BarData) {
+    return {
+      labels: barData.labels.reverse(),
+      datasets: barData.datasets,
     };
   }
 }

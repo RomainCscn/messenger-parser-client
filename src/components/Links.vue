@@ -43,12 +43,13 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
+import { mapMutations } from 'vuex';
+import axios from 'axios';
 import Link from '@/components/Link.vue';
 import Days from '@/components/Days.vue';
 import Months from '@/components/Months.vue';
 import Years from '@/components/Years.vue';
 import store from '@/store';
-import axios from 'axios';
 
 @Component({
   components: {
@@ -119,6 +120,11 @@ export default class Links extends Vue {
     }
   }
 
+  private updateSearchedLinks(links: Link[]) {
+      store.commit('setSearched', true);
+      store.commit('setSearchedLinks', links);
+  }
+
   private async searchAll() {
     try {
       const response = await axios.get('http://localhost:3000/search/all', {
@@ -128,8 +134,7 @@ export default class Links extends Vue {
           day: this.computedDay,
         },
       });
-      store.commit('setSearched', true);
-      store.commit('setSearchedLinks', response.data.links);
+      this.updateSearchedLinks(response.data.links);
     } catch (error) {
       console.error(error);
     }
@@ -144,8 +149,7 @@ export default class Links extends Vue {
           day: this.computedDay,
         },
       });
-      store.commit('setSearched', true);
-      store.commit('setSearchedLinks', response.data.links);
+      this.updateSearchedLinks(response.data.links);
     } catch (error) {
       console.error(error);
     }
@@ -160,8 +164,7 @@ export default class Links extends Vue {
           day: this.computedDay,
         },
       });
-      store.commit('setSearched', true);
-      store.commit('setSearchedLinks', response.data.links);
+      this.updateSearchedLinks(response.data.links);
     } catch (error) {
       console.error(error);
     }
@@ -176,8 +179,7 @@ export default class Links extends Vue {
           day: this.computedDay,
         },
       });
-      store.commit('setSearched', true);
-      store.commit('setSearchedLinks', response.data.links);
+      this.updateSearchedLinks(response.data.links);
     } catch (error) {
       console.error(error);
     }
