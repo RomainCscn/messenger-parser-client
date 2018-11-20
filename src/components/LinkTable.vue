@@ -40,6 +40,9 @@ export default class Link extends Vue {
   text-decoration: none;
   color: #42b983;
   font-weight: bold;
+  &:visited {
+    color: #276F4E;
+  }
 }
 
 .small-link {
