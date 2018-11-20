@@ -33,6 +33,8 @@
       <div class="is-italic links-number" v-if="searched && searchedLinks.length >= 0">{{searchedLinks.length}} link<span v-if="searchedLinks.length > 0">s</span> found</div>
     </div>
     <div style="overflow-x:auto;">
+      <clip-loader :loading="loading"></clip-loader>
+      <div v-if="!loading" style="height: 42px"></div>
       <table v-if="searched && searchedLinks.length > 0" class="table is-hoverable is-fullwidth is-narrow">
         <thead>
           <tr>
@@ -52,6 +54,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import { mapMutations } from 'vuex';
+import ClipLoader from 'vue-spinner/src/ClipLoader.vue';
 import axios from 'axios';
 import Link from '@/components/Link.vue';
 import LinkTable from '@/components/LinkTable.vue';
@@ -62,6 +65,7 @@ import store from '@/store';
 
 @Component({
   components: {
+    ClipLoader,
     Link,
     LinkTable,
     Days,
@@ -77,6 +81,7 @@ export default class Links extends Vue {
   private month: number = 0;
   private day: number = 0;
   private showDateError: boolean = false;
+  private loading: boolean = false;
 
   get computedYear() {
     return this.year === 0 ? null : this.year;
@@ -136,6 +141,7 @@ export default class Links extends Vue {
 
   private async searchAll() {
     try {
+      this.loading = true;
       const response = await axios.get('http://localhost:3000/search/all', {
         params: {
           year: this.computedYear,
@@ -143,6 +149,7 @@ export default class Links extends Vue {
           day: this.computedDay,
         },
       });
+      this.loading = false;
       this.updateSearchedLinks(response.data.links);
     } catch (error) {
       console.error(error);
@@ -151,6 +158,7 @@ export default class Links extends Vue {
 
   private async searchSite() {
     try {
+      this.loading = true;
       const response = await axios.get('http://localhost:3000/search/site/' + this.site, {
         params: {
           year: this.computedYear,
@@ -158,6 +166,7 @@ export default class Links extends Vue {
           day: this.computedDay,
         },
       });
+      this.loading = false;
       this.updateSearchedLinks(response.data.links);
     } catch (error) {
       console.error(error);
@@ -166,6 +175,7 @@ export default class Links extends Vue {
 
   private async searchSender() {
     try {
+      this.loading = true;
       const response = await axios.get('http://localhost:3000/search/sender/' + this.sender, {
         params: {
           year: this.computedYear,
@@ -173,6 +183,7 @@ export default class Links extends Vue {
           day: this.computedDay,
         },
       });
+      this.loading = false;
       this.updateSearchedLinks(response.data.links);
     } catch (error) {
       console.error(error);
@@ -181,6 +192,7 @@ export default class Links extends Vue {
 
   private async searchSiteAndSender() {
     try {
+      this.loading = true;
       const response = await axios.get('http://localhost:3000/search/site/' + this.site + '/sender/' + this.sender, {
         params: {
           year: this.computedYear,
@@ -188,6 +200,7 @@ export default class Links extends Vue {
           day: this.computedDay,
         },
       });
+      this.loading = false;
       this.updateSearchedLinks(response.data.links);
     } catch (error) {
       console.error(error);
