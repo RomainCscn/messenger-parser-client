@@ -7,9 +7,11 @@
       <LineChart :chartData="yearsChartData()"/>
     </div>
     <div class="column">
-      <select v-model="selectedYear" name="year" id="year">
-        <option v-for="year in allYears" :value="year" :key="year">{{year}}</option>
-      </select>
+      <div class="select">
+        <select v-model="selectedYear" name="year" id="year">
+          <option v-for="year in allYears" :value="year" :key="year">{{year}}</option>
+        </select>
+      </div>
       <LineChart :chartData="monthsChartData(selectedYear)"/>
     </div>
   </div>
@@ -18,6 +20,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import axios from 'axios';
+import store from '@/store';
 import LineChart from '@/components/LineChart.vue';
 import PieChart from '@/components/PieChart.vue';
 import ColorChooser from '@/components/ColorChooser.vue';
@@ -43,7 +46,7 @@ interface ChartData {
 export default class Statistics extends Vue {
 
   private loaded: boolean = false;
-  private links: Link[] = [];
+  private links: Link[] = store.state.allLinks;
   private color = new ColorChooser();
   private selectedYear = '2018';
 
@@ -112,21 +115,23 @@ export default class Statistics extends Vue {
 
   private async searchAll() {
     try {
-      const response = await axios.get('http://localhost:3000/search/all');
-      this.links = response.data.links;
+      if (this.links.length === 0) {
+        const response = await axios.get('http://localhost:3000/search/all');
+        this.links = response.data.links;
+        store.commit('setAllLinks', response.data.links);
+      }
+      // this.allSenders.forEach((sender) => {
+      //   this.allYears.forEach((year) => {
+      //     console.log(sender, year, this.linksForYear(this.linksPerSender(this.links, sender), year).length);
+      //   });
+      // });
 
-      this.allSenders.forEach((sender) => {
-        this.allYears.forEach((year) => {
-          // console.log(sender, year, this.linksForYear(this.linksPerSender(this.links, sender), year).length);
-        });
-      });
-
-      this.allSenders.forEach((sender) => {
-        this.allMonths.forEach((month) => {
-          // console.log(sender, month,
-          // this.linksForMonth(this.linksPerSender(this.links, sender), month).length);
-        });
-      });
+      // this.allSenders.forEach((sender) => {
+      //   this.allMonths.forEach((month) => {
+      //     console.log(sender, month,
+      //     this.linksForMonth(this.linksPerSender(this.links, sender), month).length);
+      //   });
+      // });
 
     } catch (error) {
       console.error(error);

@@ -31,13 +31,13 @@
         </button>
       </div>
       <div class="control">
-        <button class="button is-text details" v-if="searched" @click="showLinksDetails = !showLinksDetails">
+        <button class="button is-text details" v-if="searchedLinks.length > 0" @click="showLinksDetails = !showLinksDetails">
           {{ showLinksDetails ? "Hide" : "Show"}} all details
         </button>
       </div>
-      <div class="is-italic links-number" v-if="searched">{{links.length}} link<span v-if="links.length > 0">s</span> found</div>
+      <div class="is-italic links-number" v-if="searched && searchedLinks.length >= 0">{{searchedLinks.length}} link<span v-if="searchedLinks.length > 0">s</span> found</div>
     </div>
-    <Link class="link-test" v-for="link in links" v-bind="link" v-bind:showDetails="showLinksDetails" v-bind:senderName="link.sender_name" v-bind:key="link.date"/>
+    <Link class="link-test" v-for="link in searchedLinks" v-bind="link" v-bind:showDetails="showLinksDetails" v-bind:senderName="link.sender_name" v-bind:key="link.date"/>
   </div>
 </template>
 
@@ -47,6 +47,7 @@ import Link from '@/components/Link.vue';
 import Days from '@/components/Days.vue';
 import Months from '@/components/Months.vue';
 import Years from '@/components/Years.vue';
+import store from '@/store';
 import axios from 'axios';
 
 @Component({
@@ -59,13 +60,11 @@ import axios from 'axios';
 })
 export default class Links extends Vue {
 
-  private links: object[] = [];
   private site: string = '';
   private sender: string = '';
   private year: number = 0;
   private month: number = 0;
   private day: number = 0;
-  private searched: boolean = false;
   private showLinksDetails: boolean = false;
   private showDateError: boolean = false;
 
@@ -84,6 +83,19 @@ export default class Links extends Vue {
   get validDate() {
     const noDate = !this.computedYear && !this.computedMonth && !this.computedDay;
     return noDate || this.computedYear !== null;
+  }
+
+  get searched() {
+    return store.state.searched;
+  }
+
+  get searchedLinks() {
+    return store.state.searchedLinks;
+  }
+
+  public async mounted() {
+    const response = await axios.get('http://localhost:3000/search/all');
+    store.commit('setAllLinks', response.data.links);
   }
 
   private updateYear(value: any) {
@@ -116,8 +128,8 @@ export default class Links extends Vue {
           day: this.computedDay,
         },
       });
-      this.searched = true;
-      this.links = response.data.links;
+      store.commit('setSearched', true);
+      store.commit('setSearchedLinks', response.data.links);
     } catch (error) {
       console.error(error);
     }
@@ -132,8 +144,8 @@ export default class Links extends Vue {
           day: this.computedDay,
         },
       });
-      this.searched = true;
-      this.links = response.data.links;
+      store.commit('setSearched', true);
+      store.commit('setSearchedLinks', response.data.links);
     } catch (error) {
       console.error(error);
     }
@@ -148,8 +160,8 @@ export default class Links extends Vue {
           day: this.computedDay,
         },
       });
-      this.searched = true;
-      this.links = response.data.links;
+      store.commit('setSearched', true);
+      store.commit('setSearchedLinks', response.data.links);
     } catch (error) {
       console.error(error);
     }
@@ -164,8 +176,8 @@ export default class Links extends Vue {
           day: this.computedDay,
         },
       });
-      this.searched = true;
-      this.links = response.data.links;
+      store.commit('setSearched', true);
+      store.commit('setSearchedLinks', response.data.links);
     } catch (error) {
       console.error(error);
     }
