@@ -12,7 +12,7 @@
           <option v-for="year in allYears" :value="year" :key="year">{{year}}</option>
         </select>
       </div>
-      <LineChart :chartData="monthsChartData(selectedYear)"/>
+      <LineChart :chartData="monthsChartData(selectedYear)" :options="startAt0()"/>
     </div>
     <div class="column">
       <BarChart :chartData="sendersBarChartData()" :options="startAt0()"/>
@@ -176,19 +176,6 @@ export default class Statistics extends Vue {
         this.links = response.data.links;
         store.commit('setAllLinks', response.data.links);
       }
-      // this.allSenders.forEach((sender) => {
-      //   this.allYears.forEach((year) => {
-      //     console.log(sender, year, this.linksForYear(this.linksPerSender(this.links, sender), year).length);
-      //   });
-      // });
-
-      // this.allSenders.forEach((sender) => {
-      //   this.allMonths.forEach((month) => {
-      //     console.log(sender, month,
-      //     this.linksForMonth(this.linksPerSender(this.links, sender), month).length);
-      //   });
-      // });
-
     } catch (error) {
       // console.error(error);
     }

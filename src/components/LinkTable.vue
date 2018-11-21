@@ -1,7 +1,7 @@
 <template>
   <tr>
-    <td class="long-link"><a class="link" :href="link">{{link}}</a></td>
-    <td class="small-link"><a class="link" :href="link">{{shortDomainName}}</a></td>
+    <td class="long-link"><a target="_blank" class="link" :href="link">{{link}}</a></td>
+    <td class="small-link"><a target="_blank" class="link" :href="link">{{shortDomainName}}</a></td>
     <td class="sender">{{senderName}}</td>
     <td class="date">{{date}}</td>
   </tr>
