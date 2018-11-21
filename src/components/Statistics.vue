@@ -190,7 +190,7 @@ export default class Statistics extends Vue {
       // });
 
     } catch (error) {
-      console.error(error);
+      // console.error(error);
     }
   }
 

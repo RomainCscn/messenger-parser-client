@@ -32,6 +32,7 @@
       </div>
       <div class="is-italic links-number" v-if="searched && searchedLinks.length >= 0">{{searchedLinks.length}} link<span v-if="searchedLinks.length > 0">s</span> found</div>
     </div>
+    <ErrorHandler v-if="error" :error="error"/>
     <div style="overflow-x:auto;">
       <clip-loader :loading="loading"></clip-loader>
       <div v-if="!loading" style="height: 42px"></div>
@@ -56,6 +57,8 @@ import { Component, Vue } from 'vue-property-decorator';
 import { mapMutations } from 'vuex';
 import ClipLoader from 'vue-spinner/src/ClipLoader.vue';
 import axios from 'axios';
+import { AxiosError } from 'axios';
+import ErrorHandler from '@/components/ErrorHandler.vue';
 import Link from '@/components/Link.vue';
 import LinkTable from '@/components/LinkTable.vue';
 import Days from '@/components/Days.vue';
@@ -66,6 +69,7 @@ import store from '@/store';
 @Component({
   components: {
     ClipLoader,
+    ErrorHandler,
     Link,
     LinkTable,
     Days,
@@ -82,6 +86,7 @@ export default class Links extends Vue {
   private day: number = 0;
   private showDateError: boolean = false;
   private loading: boolean = false;
+  private error: any = null;
 
   get computedYear() {
     return this.year === 0 ? null : this.year;
@@ -151,8 +156,9 @@ export default class Links extends Vue {
       });
       this.loading = false;
       this.updateSearchedLinks(response.data.links);
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      this.error = err;
+      this.loading = false;
     }
   }
 
@@ -168,8 +174,9 @@ export default class Links extends Vue {
       });
       this.loading = false;
       this.updateSearchedLinks(response.data.links);
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      this.error = err;
+      this.loading = false;
     }
   }
 
@@ -185,8 +192,9 @@ export default class Links extends Vue {
       });
       this.loading = false;
       this.updateSearchedLinks(response.data.links);
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      this.error = err;
+      this.loading = false;
     }
   }
 
@@ -202,8 +210,9 @@ export default class Links extends Vue {
       });
       this.loading = false;
       this.updateSearchedLinks(response.data.links);
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      this.error = err;
+      this.loading = false;
     }
   }
 
