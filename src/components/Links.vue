@@ -114,7 +114,7 @@ export default class Links extends Vue {
   }
 
   public async mounted() {
-    const response = await axios.get('http://localhost:3000/search/all');
+    const response = await axios.get(`http://${window.location.hostname}:3000/search/all`);
     store.commit('setAllLinks', response.data.links);
   }
 
