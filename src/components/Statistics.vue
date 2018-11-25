@@ -1,23 +1,59 @@
 <template>
-  <div class="columns is-multiline">
-    <div class="column">
-      <PieChart :chartData="sendersChartData()"/>
-    </div>
-    <div class="column">
-      <LineChart :chartData="yearsChartData()"/>
-    </div>
-    <div class="column">
-      <div class="select">
-        <select v-model="selectedYear" name="year" id="year">
-          <option v-for="year in allYears" :value="year" :key="year">{{year}}</option>
-        </select>
+  <section>
+    <div class="columns is-mobile">
+      <div v-if="this.links.length > 0" class="column">
+        <div class="total-links-number">
+          {{this.links.length}}
+        </div>
+        <div class="total-links-label">
+          Total links sent
+        </div>
       </div>
-      <LineChart :chartData="monthsChartData(selectedYear)" :options="startAt0()"/>
+      <div v-if="linksForYear(this.links, currentYear).length > 0" class="column">
+        <div class="total-links-number">
+          {{linksForYear(this.links, currentYear).length}}
+        </div>
+        <div class="total-links-label">
+          Links sent in {{currentYear}}
+        </div>
+      </div>
+      <div v-if="linksForMonth(this.links, currentMonth).length > 0" class="column">
+        <div class="total-links-number">
+          {{linksForMonth(this.links, `${currentMonth}-${currentYear}`).length}}
+        </div>
+        <div class="total-links-label">
+          Links sent in {{currentMonthName}}
+        </div>
+      </div>
     </div>
-    <div class="column">
-      <BarChart :chartData="sendersBarChartData()" :options="startAt0()"/>
+    <div class="columns is-multiline">
+      <div class="column is-half-tablet">
+        <div class="box">
+          <PieChart :chartData="sendersChartData()"/>
+        </div>
+      </div>
+      <div class="column is-half-tablet">
+        <div class="box">
+          <LineChart :chartData="yearsChartData()"/>
+        </div>
+      </div>
+      <div class="column is-half-tablet">
+        <div class="box">
+          <div class="select">
+            <select v-model="selectedYear" name="year" id="year">
+              <option v-for="year in allYears" :value="year" :key="year">{{year}}</option>
+            </select>
+          </div>
+          <LineChart :chartData="monthsChartData(selectedYear)" :options="startAt0()"/>
+        </div>
+      </div>
+      <div class="column is-half-tablet">
+        <div class="box">
+          <BarChart :chartData="sendersBarChartData()" :options="startAt0()"/>
+        </div>
+      </div>
     </div>
-  </div>
+  </section>
 </template>
 
 <script lang="ts">
@@ -65,7 +101,10 @@ export default class Statistics extends Vue {
   private loaded: boolean = false;
   private links: Link[] = store.state.allLinks;
   private color = new ColorChooser();
-  private selectedYear = '2018';
+  private currentYear = (new Date()).getFullYear();
+  private currentMonth = (new Date()).getMonth() + 1;
+  private currentMonthName = (new Date()).toLocaleString('en-us', {month: 'long'});
+  private selectedYear = this.currentYear.toString();
 
   public mounted() {
     this.searchAll();
@@ -234,5 +273,13 @@ export default class Statistics extends Vue {
 </script>
 
 <style lang="scss" scoped>
+
+.total-links-number {
+  font-size: 3rem;
+}
+
+.total-links-label {
+  color: gray;
+}
 
 </style>

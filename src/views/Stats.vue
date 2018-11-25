@@ -4,10 +4,10 @@
       <div class="hero-body">
         <div class="container">
           <h1 class="title">
-            Statistics about your messages
+            Statistics about your links
           </h1>
           <h2 class="subtitle">
-            <em>How many links did you send this month?</em> And way more
+            Find out how many links you sent this year <em style="color: #b5b5b5">(and way more)</em>
           </h2>
         </div>
       </div>
