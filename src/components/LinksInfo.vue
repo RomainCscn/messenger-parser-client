@@ -45,6 +45,10 @@ export default class LinksInfo extends Vue {
 
 <style lang="scss" scoped>
 
+.columns {
+  margin-bottom: 3rem;
+}
+
 .links-info {
   text-align: center;
 }

@@ -2,32 +2,38 @@
   <section>
     <clip-loader :loading="loading"></clip-loader>
     <div v-if="!loading">
-      <LinksInfo :totalLinks="this.links.length" :totalLinksYear="linksForYear(this.links, currentYear).length"
-        :totalLinksMonth="linksForMonth(this.links, `${currentMonth}-${currentYear}`).length"/>
-      <div class="columns is-multiline">
-        <div class="column is-half-tablet">
-          <div class="box">
-            <PieChart :chartData="sendersChartData()"/>
-          </div>
+      <div class="section">
+        <div class="container">
+          <LinksInfo :totalLinks="this.links.length" :totalLinksYear="linksForYear(this.links, currentYear).length"
+            :totalLinksMonth="linksForMonth(this.links, `${currentMonth}-${currentYear}`).length"/>
         </div>
-        <div class="column is-half-tablet">
-          <div class="box">
-            <LineChart :chartData="yearsChartData()"/>
-          </div>
-        </div>
-        <div class="column is-half-tablet">
-          <div class="box">
-            <div class="select">
-              <select v-model="selectedYear" name="year" id="year">
-                <option v-for="year in allYears" :value="year" :key="year">{{year}}</option>
-              </select>
+        <div class="container">
+          <div class="columns is-multiline">
+            <div class="column is-half-tablet">
+              <div class="box">
+                <PieChart :chartData="sendersChartData()"/>
+              </div>
             </div>
-            <LineChart :chartData="monthsChartData(selectedYear)" :options="startAt0()"/>
-          </div>
-        </div>
-        <div class="column is-half-tablet">
-          <div class="box">
-            <BarChart :chartData="sendersBarChartData()" :options="startAt0()"/>
+            <div class="column is-half-tablet">
+              <div class="box">
+                <LineChart :chartData="yearsChartData()"/>
+              </div>
+            </div>
+            <div class="column is-half-tablet">
+              <div class="box">
+                <div class="select">
+                  <select v-model="selectedYear" name="year" id="year">
+                    <option v-for="year in allYears" :value="year" :key="year">{{year}}</option>
+                  </select>
+                </div>
+                <LineChart :chartData="monthsChartData(selectedYear)" :options="startAt0()"/>
+              </div>
+            </div>
+            <div class="column is-half-tablet">
+              <div class="box">
+                <BarChart :chartData="sendersBarChartData()" :options="startAt0()"/>
+              </div>
+            </div>
           </div>
         </div>
       </div>

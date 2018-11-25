@@ -1,53 +1,55 @@
 <template>
-  <div>
-    <div class="field">
-      <span class="label">Site filter</span>
-      <input class="input" v-model="site" type="text" placeholder="Site">
-    </div>
-    <div class="field">
-      <span class="label">Sender filter</span>
-      <input class="input" v-model="sender" type="text" placeholder="Sender">
-    </div>
-    <div class="field">
-      <span class="label">Date filter</span>
-      <div class="date-container">
-        <Years class="date-selector" v-bind:class="{ 'is-danger': showDateError }" @selected="updateYear"></Years>
-        <Months class="date-selector" @selected="updateMonth"></Months>
-        <Days class="date-selector day-selector" @selected="updateDays"></Days>
-        <article v-if="showDateError" class="message is-danger date-error-container">
-          <div class="message-body date-error-msg">
-            Input at least a year or no date at all.
-          </div>
-        </article>
+  <div class="section">
+    <div class="container">
+      <div class="field">
+        <span class="label">Site filter</span>
+        <input class="input" v-model="site" type="text" placeholder="Site">
       </div>
-    </div>
-    <div class="field is-grouped search-container">
-      <div class="control">
-        <button class="button is-primary is-medium" @click="search">
-          <span class="icon">
-            <img src="../assets/search.svg" style="max-height: 24px"/>
-          </span>
-          <span>Search</span>
-        </button>
+      <div class="field">
+        <span class="label">Sender filter</span>
+        <input class="input" v-model="sender" type="text" placeholder="Sender">
       </div>
-      <div class="is-italic links-number" v-if="searched && searchedLinks.length >= 0">{{searchedLinks.length}} link<span v-if="searchedLinks.length > 0">s</span> found</div>
-    </div>
-    <ErrorHandler v-if="error" :error="error"/>
-    <div style="overflow-x:auto;">
-      <clip-loader :loading="loading"></clip-loader>
-      <div v-if="!loading" style="height: 42px"></div>
-      <table v-if="searched && searchedLinks.length > 0" class="table is-hoverable is-fullwidth is-narrow">
-        <thead>
-          <tr>
-            <th>Link</th>
-            <th>Sender</th>
-            <th>Date</th>
-          </tr>
-        </thead>
-        <tbody>
-          <LinkTable class="link-test" v-for="link in searchedLinks" v-bind="link" :senderName="link.sender_name" :key="link.date"/>
-        </tbody>
-      </table>
+      <div class="field">
+        <span class="label">Date filter</span>
+        <div class="date-container">
+          <Years class="date-selector" v-bind:class="{ 'is-danger': showDateError }" @selected="updateYear"></Years>
+          <Months class="date-selector" @selected="updateMonth"></Months>
+          <Days class="date-selector day-selector" @selected="updateDays"></Days>
+          <article v-if="showDateError" class="message is-danger date-error-container">
+            <div class="message-body date-error-msg">
+              Input at least a year or no date at all.
+            </div>
+          </article>
+        </div>
+      </div>
+      <div class="field is-grouped search-container">
+        <div class="control">
+          <button class="button is-primary is-medium" @click="search">
+            <span class="icon">
+              <img src="../assets/search.svg" style="max-height: 24px"/>
+            </span>
+            <span>Search</span>
+          </button>
+        </div>
+        <div class="is-italic links-number" v-if="searched && searchedLinks.length >= 0">{{searchedLinks.length}} link<span v-if="searchedLinks.length > 0">s</span> found</div>
+      </div>
+      <ErrorHandler v-if="error" :error="error"/>
+      <div style="overflow-x:auto;">
+        <clip-loader :loading="loading"></clip-loader>
+        <div v-if="!loading" style="height: 42px"></div>
+        <table v-if="searched && searchedLinks.length > 0" class="table is-hoverable is-fullwidth is-narrow">
+          <thead>
+            <tr>
+              <th>Link</th>
+              <th>Sender</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <LinkTable class="link-test" v-for="link in searchedLinks" v-bind="link" :senderName="link.sender_name" :key="link.date"/>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </template>
