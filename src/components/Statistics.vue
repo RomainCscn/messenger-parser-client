@@ -1,31 +1,34 @@
 <template>
   <section>
-    <LinksInfo :totalLinks="this.links.length" :totalLinksYear="linksForYear(this.links, currentYear).length"
-      :totalLinksMonth="linksForMonth(this.links, `${currentMonth}-${currentYear}`).length"/>
-    <div class="columns is-multiline">
-      <div class="column is-half-tablet">
-        <div class="box">
-          <PieChart :chartData="sendersChartData()"/>
-        </div>
-      </div>
-      <div class="column is-half-tablet">
-        <div class="box">
-          <LineChart :chartData="yearsChartData()"/>
-        </div>
-      </div>
-      <div class="column is-half-tablet">
-        <div class="box">
-          <div class="select">
-            <select v-model="selectedYear" name="year" id="year">
-              <option v-for="year in allYears" :value="year" :key="year">{{year}}</option>
-            </select>
+    <clip-loader :loading="loading"></clip-loader>
+    <div v-if="!loading">
+      <LinksInfo :totalLinks="this.links.length" :totalLinksYear="linksForYear(this.links, currentYear).length"
+        :totalLinksMonth="linksForMonth(this.links, `${currentMonth}-${currentYear}`).length"/>
+      <div class="columns is-multiline">
+        <div class="column is-half-tablet">
+          <div class="box">
+            <PieChart :chartData="sendersChartData()"/>
           </div>
-          <LineChart :chartData="monthsChartData(selectedYear)" :options="startAt0()"/>
         </div>
-      </div>
-      <div class="column is-half-tablet">
-        <div class="box">
-          <BarChart :chartData="sendersBarChartData()" :options="startAt0()"/>
+        <div class="column is-half-tablet">
+          <div class="box">
+            <LineChart :chartData="yearsChartData()"/>
+          </div>
+        </div>
+        <div class="column is-half-tablet">
+          <div class="box">
+            <div class="select">
+              <select v-model="selectedYear" name="year" id="year">
+                <option v-for="year in allYears" :value="year" :key="year">{{year}}</option>
+              </select>
+            </div>
+            <LineChart :chartData="monthsChartData(selectedYear)" :options="startAt0()"/>
+          </div>
+        </div>
+        <div class="column is-half-tablet">
+          <div class="box">
+            <BarChart :chartData="sendersBarChartData()" :options="startAt0()"/>
+          </div>
         </div>
       </div>
     </div>
@@ -35,6 +38,8 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import axios from 'axios';
+import ClipLoader from 'vue-spinner/src/ClipLoader.vue';
+
 import store from '@/store';
 import LineChart from '@/components/chart/LineChart.vue';
 import PieChart from '@/components/chart/PieChart.vue';
@@ -67,6 +72,7 @@ interface BarData {
 
 @Component({
   components: {
+    ClipLoader,
     LineChart,
     PieChart,
     BarChart,
@@ -76,7 +82,7 @@ interface BarData {
 })
 export default class Statistics extends Vue {
 
-  private loaded: boolean = false;
+  private loading: boolean = false;
   private links: Link[] = store.state.allLinks;
   private color = new ColorChooser();
   private currentYear = (new Date()).getFullYear();
@@ -189,9 +195,11 @@ export default class Statistics extends Vue {
   private async searchAll() {
     try {
       if (this.links.length === 0) {
+        this.loading = true;
         const response = await axios.get('http://localhost:3000/search/all');
         this.links = response.data.links;
         store.commit('setAllLinks', response.data.links);
+        this.loading = false;
       }
     } catch (error) {
       // console.error(error);
