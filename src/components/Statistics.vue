@@ -1,31 +1,7 @@
 <template>
   <section>
-    <div class="columns is-mobile">
-      <div v-if="this.links.length > 0" class="column">
-        <div class="total-links-number">
-          {{this.links.length}}
-        </div>
-        <div class="total-links-label">
-          Total links sent
-        </div>
-      </div>
-      <div v-if="linksForYear(this.links, currentYear).length > 0" class="column">
-        <div class="total-links-number">
-          {{linksForYear(this.links, currentYear).length}}
-        </div>
-        <div class="total-links-label">
-          Links sent in {{currentYear}}
-        </div>
-      </div>
-      <div v-if="linksForMonth(this.links, currentMonth).length > 0" class="column">
-        <div class="total-links-number">
-          {{linksForMonth(this.links, `${currentMonth}-${currentYear}`).length}}
-        </div>
-        <div class="total-links-label">
-          Links sent in {{currentMonthName}}
-        </div>
-      </div>
-    </div>
+    <LinksInfo :totalLinks="this.links.length" :totalLinksYear="linksForYear(this.links, currentYear).length"
+      :totalLinksMonth="linksForMonth(this.links, `${currentMonth}-${currentYear}`).length"/>
     <div class="columns is-multiline">
       <div class="column is-half-tablet">
         <div class="box">
@@ -64,6 +40,7 @@ import LineChart from '@/components/chart/LineChart.vue';
 import PieChart from '@/components/chart/PieChart.vue';
 import BarChart from '@/components/chart/BarChart.vue';
 import ColorChooser from '@/components/ColorChooser.vue';
+import LinksInfo from '@/components/LinksInfo.vue';
 
 interface Link {
     date: string;
@@ -94,6 +71,7 @@ interface BarData {
     PieChart,
     BarChart,
     ColorChooser,
+    LinksInfo,
   },
 })
 export default class Statistics extends Vue {
@@ -273,13 +251,5 @@ export default class Statistics extends Vue {
 </script>
 
 <style lang="scss" scoped>
-
-.total-links-number {
-  font-size: 3rem;
-}
-
-.total-links-label {
-  color: gray;
-}
 
 </style>
