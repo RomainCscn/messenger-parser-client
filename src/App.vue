@@ -2,7 +2,6 @@
   <div id="app">
     <div id="nav">
       <router-link to="/">Home</router-link> |
-      <router-link to="/search">Search</router-link> |
       <router-link to="/stats">Stats</router-link>
     </div>
     <router-view/>
@@ -18,8 +17,10 @@
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
 }
+
 #nav {
-  padding: 30px;
+  padding-top: 2rem;
+  text-align: center;
   a {
     font-weight: bold;
     color: #2c3e50;

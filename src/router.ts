@@ -8,11 +8,6 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: Home,
-    },
-    {
-      path: '/search',
       name: 'search',
       // route level code-splitting
       // this generates a separate chunk (search.[hash].js) for this route
