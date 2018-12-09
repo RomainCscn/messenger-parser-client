@@ -167,7 +167,7 @@ export default class Links extends Vue {
   private async searchSite() {
     try {
       this.loading = true;
-      const response = await axios.get(`http://${window.location.hostname}:3000/search/site` + this.site, {
+      const response = await axios.get(`http://${window.location.hostname}:3000/search/site/` + this.site, {
         params: {
           year: this.computedYear,
           month: this.computedMonth,
@@ -185,7 +185,7 @@ export default class Links extends Vue {
   private async searchSender() {
     try {
       this.loading = true;
-      const response = await axios.get(`http://${window.location.hostname}:3000/search/sender` + this.sender, {
+      const response = await axios.get(`http://${window.location.hostname}:3000/search/sender/` + this.sender, {
         params: {
           year: this.computedYear,
           month: this.computedMonth,
@@ -203,7 +203,7 @@ export default class Links extends Vue {
   private async searchSiteAndSender() {
     try {
       this.loading = true;
-      const response = await axios.get(`http://${window.location.hostname}:3000/search/site`
+      const response = await axios.get(`http://${window.location.hostname}:3000/search/site/`
         + this.site + '/sender/' + this.sender, {
         params: {
           year: this.computedYear,
