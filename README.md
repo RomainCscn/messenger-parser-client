@@ -1,29 +1,24 @@
 # messenger-parser-client
 
-## Project setup
-```
-npm install
-```
+A client built in Vue.js for the [messenger links parser server](https://github.com/RomainCscn/messenger-links-parser).
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+This client let you search for the links you sent across Facebook Messenger, using various filters (sender, site or date). It also displays statistics about your links sending.
 
-### Compiles and minifies for production
-```
-npm run build
-```
+<img src="screenshots/home_links.png">
+<img src="screenshots/stats.png">
+<img src="screenshots/stats2.png">
 
-### Run your tests
-```
-npm run test
-```
+## How to use it
 
-### Lints and fixes files
-```
-npm run lint
-```
+### Local
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+To locally run the project, use `npm run serve`.
+
+Don't forget to run the [server](https://github.com/RomainCscn/messenger-links-parser#server).
+
+### Hosting and online usage
+
+You can host this project and use it online. Run the build command `npm run build`.
+
+Put the `build/`content on any hosting platform or your own server. The generated files are static so you can use Netlify for a free hosting, or even Github pages.
+
