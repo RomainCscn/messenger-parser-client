@@ -20,5 +20,5 @@ Don't forget to run the [server](https://github.com/RomainCscn/messenger-links-p
 
 You can host this project and use it online. Run the build command `npm run build`.
 
-Put the `build/`content on any hosting platform or your own server. The generated files are static so you can use Netlify for a free hosting, or even Github pages.
+Put the `dist/`content on any hosting platform or your own server. The generated files are static so you can use Netlify for a free hosting, or even Github pages.
 
